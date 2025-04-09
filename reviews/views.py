@@ -16,6 +16,9 @@ class ReviewListCreateView(generics.ListCreateAPIView):
 
 class ReviewListByMovieView(generics.ListAPIView):
     serializer_class = ReviewSerializer
+    def get_queryset(self):
+        movie_id = self.kwargs['movie_id']
+        return Review.objects.filter(movie_id=movie_id)
     permission_classes = [IsAuthenticatedOrReadOnly]  # Filter reviews by movie ID
 
     def get_queryset(self):
@@ -26,3 +29,10 @@ class ReviewDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]  # Only authenticated
+from django_filters.rest_framework import DjangoFilterBackend
+
+class MovieListCreateView(generics.ListCreateAPIView):
+    queryset = Movie.objects.all()
+    serializer_class = MovieSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['title', 'release_date']
