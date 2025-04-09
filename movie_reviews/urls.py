@@ -31,3 +31,11 @@ urlpatterns += [
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
+urlpatterns = [
+    path('movies/<int:movie_id>/reviews/', ReviewListByMovieView.as_view(), name='reviews-by-movie'),
+]
+from django.urls import include, path
+
+urlpatterns = [
+    path('api/', include('reviews.urls')),
+]
