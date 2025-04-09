@@ -8,10 +8,11 @@ from django_filters.rest_framework import DjangoFilterBackend
 from django.http import HttpResponse
 
 class MovieListCreateView(generics.ListCreateAPIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]  # View for anyone, create requires authentication
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]  # View for anyone, create requires authentication
-
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['title', 'release_date']
 class ReviewListCreateView(generics.ListCreateAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
@@ -30,11 +31,7 @@ class ReviewDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ReviewSerializer
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]  # Only authenticated
 
-class MovieListCreateView(generics.ListCreateAPIView):
-    queryset = Movie.objects.all()
-    serializer_class = MovieSerializer
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['title', 'release_date']
+
 class MovieViewSet(viewsets.ModelViewSet):
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
