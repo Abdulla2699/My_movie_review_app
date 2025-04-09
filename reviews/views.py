@@ -16,10 +16,7 @@ class ReviewListCreateView(generics.ListCreateAPIView):
 
 class ReviewListByMovieView(generics.ListAPIView):
     serializer_class = ReviewSerializer
-    def get_queryset(self):
-        movie_id = self.kwargs['movie_id']
-        return Review.objects.filter(movie_id=movie_id)
-    permission_classes = [IsAuthenticatedOrReadOnly]  # Filter reviews by movie ID
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
         movie_id = self.kwargs['movie_id']
