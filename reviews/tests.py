@@ -59,4 +59,22 @@ def test_create_review(self):
     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
     self.assertEqual(response.data['review'], data['review'])
     self.assertEqual(response.data['rating'], data['rating'])
+def test_get_reviews_by_movie(self):
+    # First, create a movie and a review for that movie
+    movie = Movie.objects.create(
+        title="The Matrix", description="Sci-fi classic", release_date="1999-03-31"
+    )
+    
+    Review.objects.create(
+        movie=movie, review="Amazing movie!", rating=5
+    )
+    
+    url = reverse('reviews-by-movie', kwargs={'movie_id': movie.id})
+    response = self.client.get(url, HTTP_AUTHORIZATION='Bearer ' + self.token)
+    
+    # Check that the status code is 200 OK and reviews are returned
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+    self.assertEqual(len(response.data), 1)
+    self.assertEqual(response.data[0]['review'], "Amazing movie!")
+    self.assertEqual(response.data[0]['rating'], 5)
 
