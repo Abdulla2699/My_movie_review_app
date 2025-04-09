@@ -5,6 +5,7 @@ from .serializers import MovieSerializer, ReviewSerializer
 from .permissions import IsOwnerOrReadOnly
 from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
+from django.http import HttpResponse
 
 class MovieListCreateView(generics.ListCreateAPIView):
     queryset = Movie.objects.all()
@@ -28,7 +29,7 @@ class ReviewDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]  # Only authenticated
-    
+
 class MovieListCreateView(generics.ListCreateAPIView):
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
@@ -41,3 +42,5 @@ class MovieViewSet(viewsets.ModelViewSet):
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
+def home(request):
+    return HttpResponse("Welcome to the Movie Review website!")
