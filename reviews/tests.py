@@ -38,4 +38,25 @@ def test_get_movies(self):
     # Check the status code (should return 200 OK) and that the response contains a list
     self.assertEqual(response.status_code, status.HTTP_200_OK)
     self.assertIsInstance(response.data, list)
+def test_create_review(self):
+    # First, create a movie to attach the review to
+    movie = Movie.objects.create(
+        title="The Matrix", description="Sci-fi classic", release_date="1999-03-31"
+    )
+    
+    # URL for adding reviews to a specific movie
+    url = reverse('reviews-by-movie', kwargs={'movie_id': movie.id})
+    
+    # Data for the review
+    data = {
+        "review": "Amazing movie!",
+        "rating": 5
+    }
+    
+    response = self.client.post(url, data, format='json', HTTP_AUTHORIZATION='Bearer ' + self.token)
+    
+    # Check that the status code is 201 Created
+    self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+    self.assertEqual(response.data['review'], data['review'])
+    self.assertEqual(response.data['rating'], data['rating'])
 
